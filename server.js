@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const util = require('util');
 var uniqid = require("uniqid");
 const path = require('path');
 const data=require('./db/db.json')
@@ -15,12 +16,12 @@ app.get('/notes', (req,res) => {
 })
 
 app.get("/api/notes", (req, res) => {
-      // Log our request to the terminal
-    console.info(`${req.method} request received to get notes`);
-      // Sending all notes to the client
-    util.promisify(fs.readFile);
-    return res.status(200).json(data);
-});
+  // Log our request to the terminal
+  console.info(`${req.method} request received to get notes`);
+  // Sending all notes to the client
+  const readFromFile = util.promisify(fs.readFile);
+  readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)))
+})
 
 app.post("/api/notes", (req, res) => {
   const { title, text } = req.body;
