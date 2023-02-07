@@ -3,7 +3,10 @@ const fs = require('fs');
 const util = require('util');
 var uniqid = require("uniqid");
 const path = require('path');
-const data=require('./db/db.json')
+const data = require('./db/db.json');
+const e = require('express');
+
+const readFromFile = util.promisify(fs.readFile);
 const app = express();
 const PORT = 3001;
 
@@ -19,7 +22,6 @@ app.get("/api/notes", (req, res) => {
   // Log our request to the terminal
   console.info(`${req.method} request received to get notes`);
   // Sending all notes to the client
-  const readFromFile = util.promisify(fs.readFile);
   readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)))
 })
 
@@ -69,6 +71,25 @@ app.post("/api/notes", (req, res) => {
     res.status(500).json("Error in posting note");
   }
 });
+
+app.delete('/api/notes/:id', (req,res) => { 
+  const deleteId = req.params.id;
+  readFromFile("./db/db.json")
+    .then((data) => JSON.parse(data))
+    .then((data) => { 
+      const deleteIndex = data.findIndex(e => (e.id === deleteId));
+      data.splice(deleteIndex, 1);
+      fs.writeFile(
+        "./db/db.json",
+        JSON.stringify(data, null, 4),
+        (writeErr) =>
+          writeErr
+            ? console.error(writeErr)
+            : console.info("Successfully deleted notes!")
+      );
+      res.json(data);
+    });
+})
 
 app.get('*', (req,res) => { 
     res.sendFile(path.join(__dirname, "public/index.html"));
