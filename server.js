@@ -8,7 +8,7 @@ const e = require('express');
 
 const readFromFile = util.promisify(fs.readFile);
 const app = express();
-const PORT = 3001;
+const port = process.env.PORT || 3001;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -95,6 +95,6 @@ app.get('*', (req,res) => {
     res.sendFile(path.join(__dirname, "public/index.html"));
 })
 
-app.listen(PORT, () =>
-  console.log(`Start listening at http://localhost:${PORT}`)
+app.listen(port, () =>
+  console.log(`Start listening at http://localhost:${port}`)
 );
