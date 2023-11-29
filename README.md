@@ -2,7 +2,7 @@
 
 This Note Taker application that can be used to write and save notes. The application will use an Express.js back end and will save and retrieve note data from a JSON file.
 
-### 🚀 [Launch Live Project](https://baby-planet.netlify.app/)
+### 🚀 [Launch Live Project](https://agile-temple-11022.herokuapp.com/)
 
 
 ## Table of Contents
